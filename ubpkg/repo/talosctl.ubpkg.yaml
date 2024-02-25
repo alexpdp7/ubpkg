@@ -1,0 +1,3 @@
+github:
+  repo: siderolabs/talos
+  asset: talosctl-{os}-{arch}
