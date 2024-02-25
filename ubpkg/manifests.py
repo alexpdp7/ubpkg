@@ -18,7 +18,9 @@ class Manifest:
 
     def install(self):
         if "github" in self.yaml:
-            url = github.get_url(self.yaml["github"]["repo"], matcher(self.yaml["github"]["asset"]))
+            url = github.get_url(
+                self.yaml["github"]["repo"], matcher(self.yaml["github"]["asset"])
+            )
         else:
             assert False, f"I do not know how to install {self.yaml}"
         path = pathlib.Path.home() / ".local" / "bin" / self.name
@@ -32,4 +34,5 @@ class Manifest:
 def matcher(asset_name: str):
     def _match(candidate: str):
         return candidate == asset_name.format(os="linux", arch="amd64")
+
     return _match

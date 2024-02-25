@@ -12,5 +12,3 @@ def run():
     args = parser.parse_args()
     manifest = manifests.Manifest(args.manifest)
     manifest.install()
-
-
