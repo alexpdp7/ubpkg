@@ -1,3 +1,4 @@
+import importlib.resources
 import logging
 import pathlib
 import shutil
@@ -10,11 +11,21 @@ from ubpkg import github
 logger = logging.getLogger(__name__)
 
 
-class Manifest:
-    def __init__(self, path: pathlib.Path):
+def load_manifest(s):
+    path = pathlib.Path(s)
+    if path.exists():
         assert path.name.endswith(".ubpkg.yaml"), f"{path} does not end in .ubpkg.yaml"
-        self.yaml = yaml.load(path.read_text(), yaml.SafeLoader)
-        self.name = path.name.removesuffix(".ubpkg.yaml")
+        return path.name.removesuffix(".ubpkg.yaml"), path.read_text()
+    path = importlib.resources.files("ubpkg") / "repo" / f"{s}.ubpkg.yaml"
+    if path.exists():
+        return s, path.read_text()
+
+
+class Manifest:
+    def __init__(self, s):
+        name, content = load_manifest(s)
+        self.yaml = yaml.load(content, yaml.SafeLoader)
+        self.name = name
 
     def install(self):
         if "github" in self.yaml:
