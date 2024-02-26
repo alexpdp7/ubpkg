@@ -7,7 +7,7 @@ logger = logging.getLogger(__name__)
 
 
 def get_releases(gh_repo):
-    logging.info("Getting releases from gh/{gh_repo}")
+    logging.info("Getting releases from gh/%s", gh_repo)
     releases = github.Github().get_repo(gh_repo).get_releases()
     return [(r.tag_name, r.created_at) for r in releases]
 
