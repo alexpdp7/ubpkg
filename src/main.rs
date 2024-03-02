@@ -6,9 +6,16 @@ use starlark::syntax::Dialect;
 use starlark::values::{NoSerialize, Value};
 #[macro_use]
 extern crate starlark;
+use crate::starlark::values::ValueLike;
 use allocative::Allocative;
+use starlark::environment::Methods;
+use starlark::environment::MethodsBuilder;
+use starlark::environment::MethodsStatic;
 use starlark::values::starlark_value;
+use starlark::values::AllocFrozenValue;
 use starlark::values::AllocValue;
+use starlark::values::FrozenHeap;
+use starlark::values::FrozenValue;
 use starlark::values::Heap;
 use starlark::values::ProvidesStaticType;
 use starlark::values::StarlarkValue;
@@ -43,16 +50,31 @@ fn main() {
 }
 
 #[derive(Debug, ProvidesStaticType, NoSerialize, Allocative)]
-struct GitHubRepo {}
+struct GitHubRepo {
+    id: String,
+}
 
 impl std::fmt::Display for GitHubRepo {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "gh")
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "gh:{}", self.id)
+    }
+}
+
+#[starlark_module]
+fn methods(builder: &mut MethodsBuilder) {
+    fn latest_release(#[starlark(this)] receiver: Value) -> anyhow::Result<i32> {
+        let repo = receiver.downcast_ref::<GitHubRepo>().unwrap();
+        Ok(0)
     }
 }
 
 #[starlark_value(type = "github_repo")]
-impl<'v> StarlarkValue<'v> for GitHubRepo {}
+impl<'v> StarlarkValue<'v> for GitHubRepo {
+    fn get_methods() -> Option<&'static Methods> {
+        static RES: MethodsStatic = MethodsStatic::new();
+        RES.methods(methods)
+    }
+}
 
 impl<'v> AllocValue<'v> for GitHubRepo {
     fn alloc_value(self, heap: &'v Heap) -> Value<'v> {
@@ -60,10 +82,18 @@ impl<'v> AllocValue<'v> for GitHubRepo {
     }
 }
 
+impl AllocFrozenValue for GitHubRepo {
+    fn alloc_frozen_value(self, heap: &FrozenHeap) -> FrozenValue {
+        heap.alloc_simple(self)
+    }
+}
+
 #[starlark_module]
 fn github(builder: &mut GlobalsBuilder) {
     fn github_repo(repo: &str) -> anyhow::Result<GitHubRepo> {
-        Ok(GitHubRepo {})
+        Ok(GitHubRepo {
+            id: repo.to_string(),
+        })
     }
 }
 
