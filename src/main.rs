@@ -40,7 +40,6 @@ fn main() {
     .unwrap();
 
     let mut globals = GlobalsBuilder::new().with(github).with(base);
-    globals.set("version", starlark::values::none::NoneType);
     globals.set("os", std::env::consts::OS);
     globals.set("arch", std::env::consts::ARCH);
     let globals = globals.build();
