@@ -1,7 +1,7 @@
 gh = github_repo("errata-ai/vale")
 
 release = gh.latest_release()
-version_str = release.name()
+version_str = release.name().removeprefix("v")
 
 os_str = {
    "linux": "Linux",
@@ -20,6 +20,6 @@ archive_format = {
    "windows": "zip",
 }[os]
 
-asset = release.download_asset("vale_{version_str}_{os_str}_{arch_str}.{archive_format}".format(version_str=version_str, os_str=os_str, arch_str=arch_str, archive_format=archive_format))
+asset = release.get_asset_url("vale_{version_str}_{os_str}_{arch_str}.{archive_format}".format(version_str=version_str, os_str=os_str, arch_str=arch_str, archive_format=archive_format))
 
-install_binary(extract(asset, archive_format, "vale"), "vale")
+install_binary(extract_from_url(asset, archive_format, "vale"), "vale")
