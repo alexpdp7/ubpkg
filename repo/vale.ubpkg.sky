@@ -22,4 +22,4 @@ archive_format = {
 
 asset = release.get_asset_url("vale_{version_str}_{os_str}_{arch_str}.{archive_format}".format(version_str=version_str, os_str=os_str, arch_str=arch_str, archive_format=archive_format))
 
-install_binary(extract_from_url(asset, archive_format, "vale"), "vale")
+install_binary(extract_from_url(asset, "vale"), "vale")

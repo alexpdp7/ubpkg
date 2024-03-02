@@ -8,6 +8,10 @@ edition = "2021"
 [dependencies]
 allocative = "0.3.3"
 anyhow = "1.0.80"
+decompress = "0.6.0"
+directories = "5.0.1"
 include_dir = "0.7.3"
+reqwest = { version = "0.11.24", features = ["blocking"] }
 starlark = "0.12.0"
+tempdir = "0.3.7"
 vsort = "0.2.0"
