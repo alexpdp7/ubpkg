@@ -1,9 +1,6 @@
 use crate::starlark::values::ValueLike;
 use allocative::Allocative;
 use starlark::environment::GlobalsBuilder;
-use starlark::environment::Methods;
-use starlark::environment::MethodsBuilder;
-use starlark::environment::MethodsStatic;
 use starlark::starlark_simple_value;
 use starlark::values::starlark_value;
 use starlark::values::ProvidesStaticType;
@@ -11,111 +8,7 @@ use starlark::values::StarlarkValue;
 use starlark::values::{NoSerialize, Value};
 use std::os::unix::fs::PermissionsExt;
 
-#[derive(Debug, ProvidesStaticType, NoSerialize, Allocative, Clone)]
-struct GitHubRepo {
-    id: String,
-}
-starlark_simple_value!(GitHubRepo);
-
-impl std::fmt::Display for GitHubRepo {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "gh:{}", self.id)
-    }
-}
-
-#[starlark_module]
-fn repo_methods(builder: &mut MethodsBuilder) {
-    fn latest_release(#[starlark(this)] receiver: Value) -> anyhow::Result<GitHubRelease> {
-        let repo = receiver.downcast_ref::<GitHubRepo>().unwrap();
-
-        let refs = std::process::Command::new("git")
-            .arg("ls-remote")
-            .arg("--tags")
-            .arg("--refs")
-            .arg(format!("https://github.com/{}.git", repo.id))
-            .stderr(std::process::Stdio::inherit())
-            .output()
-            .unwrap();
-
-        assert!(refs.status.success());
-
-        let output = String::from_utf8(refs.stdout).unwrap();
-        let mut versions = output
-            .split('\n')
-            .flat_map(|l| l.split_once('\t')) // the last line is blank :(
-            .map(|(_hash, id)| id)
-            .map(|id| id.strip_prefix("refs/tags/").unwrap())
-            .collect::<Vec<&str>>();
-
-        versions.sort_by(|a: &&str, b: &&str| vsort::compare(a, b));
-
-        Ok(GitHubRelease {
-            github_repo: repo.clone(),
-            tag: versions.last().unwrap().to_string(),
-        })
-    }
-}
-
-#[starlark_value(type = "github_repo")]
-impl<'v> StarlarkValue<'v> for GitHubRepo {
-    fn get_methods() -> Option<&'static Methods> {
-        static RES: MethodsStatic = MethodsStatic::new();
-        RES.methods(repo_methods)
-    }
-}
-
-#[derive(Debug, ProvidesStaticType, NoSerialize, Allocative, Clone)]
-struct GitHubRelease {
-    github_repo: GitHubRepo,
-    tag: String,
-}
-starlark_simple_value!(GitHubRelease);
-
-impl std::fmt::Display for GitHubRelease {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "gh:{}", self.github_repo)
-    }
-}
-
-#[starlark_module]
-fn release_methods(builder: &mut MethodsBuilder) {
-    fn name(#[starlark(this)] receiver: Value) -> anyhow::Result<String> {
-        let release = receiver.downcast_ref::<GitHubRelease>().unwrap();
-        Ok(release.tag.clone())
-    }
-
-    fn get_asset_url(#[starlark(this)] receiver: Value, name: &str) -> anyhow::Result<String> {
-        let release = receiver.downcast_ref::<GitHubRelease>().unwrap();
-        Ok(format!(
-            "https://github.com/{}/releases/download/{}/{}",
-            release.github_repo.id, release.tag, name,
-        ))
-    }
-}
-
-#[starlark_value(type = "github_release")]
-impl<'v> StarlarkValue<'v> for GitHubRelease {
-    fn get_methods() -> Option<&'static Methods> {
-        static RES: MethodsStatic = MethodsStatic::new();
-        RES.methods(release_methods)
-    }
-}
-
-#[derive(Debug, ProvidesStaticType, NoSerialize, Allocative)]
-struct GitHubAsset {
-    github_release: GitHubRelease,
-    name: String,
-}
-starlark_simple_value!(GitHubAsset);
-
-impl std::fmt::Display for GitHubAsset {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "release:{} name:{}", self.github_release, self.name)
-    }
-}
-
-#[starlark_value(type = "github_release")]
-impl<'v> StarlarkValue<'v> for GitHubAsset {}
+use crate::github::GitHubRepo;
 
 #[derive(Debug, ProvidesStaticType, NoSerialize, Allocative)]
 struct FileContents {
