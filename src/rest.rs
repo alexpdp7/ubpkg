@@ -8,8 +8,6 @@ use starlark::values::StarlarkValue;
 use starlark::values::{NoSerialize, Value};
 use std::os::unix::fs::PermissionsExt;
 
-use crate::github::GitHubRepo;
-
 #[derive(Debug, ProvidesStaticType, NoSerialize, Allocative)]
 struct FileContents {
     contents: Vec<u8>,
@@ -24,15 +22,6 @@ impl std::fmt::Display for FileContents {
 
 #[starlark_value(type = "file_contents")]
 impl<'v> StarlarkValue<'v> for FileContents {}
-
-#[starlark_module]
-pub fn github(builder: &mut GlobalsBuilder) {
-    fn github_repo(repo: &str) -> anyhow::Result<GitHubRepo> {
-        Ok(GitHubRepo {
-            id: repo.to_string(),
-        })
-    }
-}
 
 #[starlark_module]
 pub fn base(builder: &mut GlobalsBuilder) {

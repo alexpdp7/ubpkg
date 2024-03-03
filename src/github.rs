@@ -1,5 +1,5 @@
 use allocative::Allocative;
-use starlark::environment::{Methods, MethodsBuilder, MethodsStatic};
+use starlark::environment::{GlobalsBuilder, Methods, MethodsBuilder, MethodsStatic};
 use starlark::values::{
     starlark_value, NoSerialize, ProvidesStaticType, StarlarkValue, Value, ValueLike,
 };
@@ -89,3 +89,12 @@ impl std::fmt::Display for GitHubAsset {
 
 #[starlark_value(type = "github_release")]
 impl<'v> StarlarkValue<'v> for GitHubAsset {}
+
+#[starlark_module]
+pub fn github(builder: &mut GlobalsBuilder) {
+    fn github_repo(repo: &str) -> anyhow::Result<GitHubRepo> {
+        Ok(GitHubRepo {
+            id: repo.to_string(),
+        })
+    }
+}
