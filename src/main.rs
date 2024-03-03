@@ -1,4 +1,5 @@
-use include_dir::{include_dir, Dir};
+use color_eyre::eyre::Result;
+
 use starlark::environment::{GlobalsBuilder, Module};
 use starlark::eval::Evaluator;
 use starlark::syntax::AstModule;
@@ -17,16 +18,11 @@ use starlark::values::ProvidesStaticType;
 use starlark::values::StarlarkValue;
 use std::os::unix::fs::PermissionsExt;
 
-const REPO: Dir = include_dir!("repo");
+use ubpkg::repo;
 
-fn main() {
-    let package = "vale";
-    let manifest_name = format!("{}.ubpkg.sky", package);
-    let manifest = REPO
-        .get_file(manifest_name.clone())
-        .unwrap()
-        .contents_utf8()
-        .unwrap();
+fn main() -> Result<()> {
+    color_eyre::install()?;
+    let (manifest_name, manifest) = repo::load_manifest_from_repo("vale".to_string())?;
 
     let ast: AstModule = AstModule::parse(
         &manifest_name.clone(),
@@ -43,6 +39,7 @@ fn main() {
     let mut eval: Evaluator = Evaluator::new(&module);
     let res: Value = eval.eval_module(ast, &globals).unwrap();
     println!("{:?}", res);
+    Ok(())
 }
 
 #[derive(Debug, ProvidesStaticType, NoSerialize, Allocative, Clone)]
