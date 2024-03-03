@@ -11,14 +11,20 @@ pub enum RepoError {
     MalformedUTF8(String),
 }
 
-pub fn load_manifest_from_repo(package: String) -> Result<(String, String), RepoError> {
+pub struct Manifest {
+    pub name: String,
+    pub content: String,
+}
+
+pub fn load_manifest_from_repo(package: String) -> Result<Manifest, RepoError> {
     let manifest_name = format!("{}.ubpkg.sky", package);
-    Ok((
-        manifest_name.clone(),
-        REPO.get_file(&manifest_name)
+    Ok(Manifest {
+        name: manifest_name.clone(),
+        content: REPO
+            .get_file(&manifest_name)
             .ok_or_else(|| RepoError::NotFound(manifest_name.clone()))?
             .contents_utf8()
             .ok_or_else(|| RepoError::MalformedUTF8(manifest_name.clone()))?
             .to_string(),
-    ))
+    })
 }
