@@ -11,12 +11,8 @@ use allocative::Allocative;
 use starlark::environment::Methods;
 use starlark::environment::MethodsBuilder;
 use starlark::environment::MethodsStatic;
+use starlark::starlark_simple_value;
 use starlark::values::starlark_value;
-use starlark::values::AllocFrozenValue;
-use starlark::values::AllocValue;
-use starlark::values::FrozenHeap;
-use starlark::values::FrozenValue;
-use starlark::values::Heap;
 use starlark::values::ProvidesStaticType;
 use starlark::values::StarlarkValue;
 use std::os::unix::fs::PermissionsExt;
@@ -53,6 +49,7 @@ fn main() {
 struct GitHubRepo {
     id: String,
 }
+starlark_simple_value!(GitHubRepo);
 
 impl std::fmt::Display for GitHubRepo {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -101,23 +98,12 @@ impl<'v> StarlarkValue<'v> for GitHubRepo {
     }
 }
 
-impl<'v> AllocValue<'v> for GitHubRepo {
-    fn alloc_value(self, heap: &'v Heap) -> Value<'v> {
-        heap.alloc_simple(self)
-    }
-}
-
-impl AllocFrozenValue for GitHubRepo {
-    fn alloc_frozen_value(self, heap: &FrozenHeap) -> FrozenValue {
-        heap.alloc_simple(self)
-    }
-}
-
 #[derive(Debug, ProvidesStaticType, NoSerialize, Allocative, Clone)]
 struct GitHubRelease {
     github_repo: GitHubRepo,
     tag: String,
 }
+starlark_simple_value!(GitHubRelease);
 
 impl std::fmt::Display for GitHubRelease {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -149,23 +135,12 @@ impl<'v> StarlarkValue<'v> for GitHubRelease {
     }
 }
 
-impl<'v> AllocValue<'v> for GitHubRelease {
-    fn alloc_value(self, heap: &'v Heap) -> Value<'v> {
-        heap.alloc_simple(self)
-    }
-}
-
-impl AllocFrozenValue for GitHubRelease {
-    fn alloc_frozen_value(self, heap: &FrozenHeap) -> FrozenValue {
-        heap.alloc_simple(self)
-    }
-}
-
 #[derive(Debug, ProvidesStaticType, NoSerialize, Allocative)]
 struct GitHubAsset {
     github_release: GitHubRelease,
     name: String,
 }
+starlark_simple_value!(GitHubAsset);
 
 impl std::fmt::Display for GitHubAsset {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -176,22 +151,11 @@ impl std::fmt::Display for GitHubAsset {
 #[starlark_value(type = "github_release")]
 impl<'v> StarlarkValue<'v> for GitHubAsset {}
 
-impl<'v> AllocValue<'v> for GitHubAsset {
-    fn alloc_value(self, heap: &'v Heap) -> Value<'v> {
-        heap.alloc_simple(self)
-    }
-}
-
-impl AllocFrozenValue for GitHubAsset {
-    fn alloc_frozen_value(self, heap: &FrozenHeap) -> FrozenValue {
-        heap.alloc_simple(self)
-    }
-}
-
 #[derive(Debug, ProvidesStaticType, NoSerialize, Allocative)]
 struct FileContents {
     contents: Vec<u8>,
 }
+starlark_simple_value!(FileContents);
 
 impl std::fmt::Display for FileContents {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
@@ -201,18 +165,6 @@ impl std::fmt::Display for FileContents {
 
 #[starlark_value(type = "file_contents")]
 impl<'v> StarlarkValue<'v> for FileContents {}
-
-impl<'v> AllocValue<'v> for FileContents {
-    fn alloc_value(self, heap: &'v Heap) -> Value<'v> {
-        heap.alloc_simple(self)
-    }
-}
-
-impl AllocFrozenValue for FileContents {
-    fn alloc_frozen_value(self, heap: &FrozenHeap) -> FrozenValue {
-        heap.alloc_simple(self)
-    }
-}
 
 #[starlark_module]
 fn github(builder: &mut GlobalsBuilder) {
