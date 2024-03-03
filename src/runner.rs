@@ -5,9 +5,9 @@ use starlark::values::Value;
 
 use thiserror::Error;
 
+use crate::base;
 use crate::github;
 use crate::repo::Manifest;
-use crate::rest;
 
 #[derive(Error, Debug)]
 pub enum ExecutionError {
@@ -21,7 +21,7 @@ pub fn run_manifest(manifest: Manifest) -> Result<(), ExecutionError> {
     let ast: AstModule = AstModule::parse(&manifest.name, manifest.content, &Dialect::Extended)
         .map_err(ExecutionError::ParsingError)?;
 
-    let mut globals = GlobalsBuilder::new().with(github::github).with(rest::base);
+    let mut globals = GlobalsBuilder::new().with(github::github).with(base::base);
     globals.set("os", std::env::consts::OS);
     globals.set("arch", std::env::consts::ARCH);
     let globals = globals.build();
