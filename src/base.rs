@@ -1,11 +1,9 @@
-use crate::starlark::values::ValueLike;
 use allocative::Allocative;
 use starlark::environment::GlobalsBuilder;
 use starlark::starlark_simple_value;
-use starlark::values::starlark_value;
-use starlark::values::ProvidesStaticType;
-use starlark::values::StarlarkValue;
-use starlark::values::{NoSerialize, Value};
+use starlark::values::{
+    starlark_value, NoSerialize, ProvidesStaticType, StarlarkValue, Value, ValueLike,
+};
 use std::os::unix::fs::PermissionsExt;
 
 #[derive(Debug, ProvidesStaticType, NoSerialize, Allocative)]
