@@ -1,14 +1,15 @@
 use thiserror::Error;
 
 #[derive(Error, Debug)]
-pub enum GitError {
+pub enum Error {
     #[error("Error executing git (maybe git is not installed?)")]
     GitExecution(#[from] std::io::Error),
     #[error("Return code {0} when executing {1}")]
     GitUnsuccessful(std::process::ExitStatus, String),
 }
 
-pub fn get_repo_sorted_versions(url: String) -> Result<Vec<String>, GitError> {
+#[allow(clippy::missing_panics_doc)]
+pub fn get_repo_sorted_versions(url: String) -> Result<Vec<String>, Error> {
     let mut binding = std::process::Command::new("git");
     let command = binding
         .arg("ls-remote")
@@ -19,16 +20,13 @@ pub fn get_repo_sorted_versions(url: String) -> Result<Vec<String>, GitError> {
     let refs = command.output()?;
 
     if !refs.status.success() {
-        return Err(GitError::GitUnsuccessful(
-            refs.status,
-            format!("{command:?}"),
-        ));
+        return Err(Error::GitUnsuccessful(refs.status, format!("{command:?}")));
     }
 
     let output = String::from_utf8(refs.stdout).unwrap();
     let mut versions = output
         .split('\n')
-        .flat_map(|l| l.split_once('\t')) // the last line is blank :(
+        .filter_map(|l| l.split_once('\t')) // the last line is blank :(
         .map(|(_hash, id)| id)
         .map(|id| id.strip_prefix("refs/tags/").unwrap().to_string())
         .collect::<Vec<String>>();
@@ -37,6 +35,7 @@ pub fn get_repo_sorted_versions(url: String) -> Result<Vec<String>, GitError> {
     Ok(versions)
 }
 
-pub fn get_repo_latest_version(url: String) -> Result<String, GitError> {
+#[allow(clippy::missing_panics_doc)]
+pub fn get_repo_latest_version(url: String) -> Result<String, Error> {
     Ok(get_repo_sorted_versions(url)?.last().unwrap().to_string())
 }
