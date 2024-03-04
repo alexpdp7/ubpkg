@@ -36,7 +36,7 @@ fn repo_methods(builder: &mut MethodsBuilder) {
             .to_string();
         Ok(GitHubRelease {
             github_repo: repo.clone(),
-            tag: dbg!(last_version),
+            tag: last_version,
         })
     }
 }

@@ -69,7 +69,7 @@ pub fn base(builder: &mut GlobalsBuilder) {
             asset_path,
             tmp_dir.path().to_path_buf(),
             &decompress::ExtractOptsBuilder::default()
-                .filter(move |p| p == x)
+                .filter(move |p| p == x) // produces output https://github.com/rusty-ferris-club/decompress/issues/15
                 .build()
                 .unwrap(),
         )
