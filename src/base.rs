@@ -6,7 +6,6 @@ use starlark::starlark_simple_value;
 use starlark::values::{
     starlark_value, NoSerialize, ProvidesStaticType, StarlarkValue, Value, ValueLike,
 };
-use std::os::unix::fs::PermissionsExt;
 
 #[derive(Debug, ProvidesStaticType, NoSerialize, Allocative)]
 struct FileContents {
@@ -35,10 +34,15 @@ pub fn base(builder: &mut GlobalsBuilder) {
         dest.push("bin");
         dest.push(name);
         let dest = dest.as_path();
-        std::fs::write(dest, contents.contents.clone()).unwrap();
-        let mut perms = std::fs::metadata(dest).unwrap().permissions();
-        perms.set_mode(perms.mode() | 0o100);
-        std::fs::set_permissions(dest, perms).unwrap();
+        std::fs::write(dest, contents.contents.clone())?;
+        #[cfg(not(windows))]
+        {
+            use std::os::unix::fs::PermissionsExt;
+
+            let mut perms = std::fs::metadata(dest).unwrap().permissions();
+            perms.set_mode(perms.mode() | 0o100);
+            std::fs::set_permissions(dest, perms).unwrap();
+        }
         Ok(0)
     }
 
