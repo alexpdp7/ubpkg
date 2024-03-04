@@ -1,0 +1,209 @@
+on: [push]
+
+name: Continuous integration
+
+jobs:
+  check:
+    name: Check
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: check
+
+  test:
+    name: Test Suite
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      matrix:
+        runs-on:
+          - ubuntu-latest
+          - windows-latest
+          - macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: test
+
+  fmt:
+    name: Rustfmt
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - run: rustup component add rustfmt
+      - uses: actions-rs/cargo@v1
+        with:
+          command: fmt
+          args: --all -- --check
+
+  clippy:
+    name: Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - run: rustup component add clippy
+      - uses: actions-rs/cargo@v1
+        with:
+          command: clippy
+          args: -- -D warnings -D clippy::pedantic
+
+  build-release-linux:
+    needs: [check, test, fmt, clippy]
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      matrix:
+        runs-on:
+          - ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          target: x86_64-unknown-linux-musl
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --target x86_64-unknown-linux-musl
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-artifact@v1
+        with:
+          name: ubpkg-${{ matrix.runs-on }}
+          path: target/x86_64-unknown-linux-musl/release/ubpkg
+
+  build-release-mac:
+    needs: [check, test, fmt, clippy]
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      matrix:
+        runs-on:
+          - macos-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+          target: aarch64-apple-darwin
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release --target=aarch64-apple-darwin
+      - run: lipo -create -output target/ubpkg target/release/ubpkg target/aarch64-apple-darwin/release/ubpkg
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-artifact@v1
+        with:
+          name: ubpkg-${{ matrix.runs-on }}
+          path: target/ubpkg
+
+  build-release-windows:
+    needs: [check, test, fmt, clippy]
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      matrix:
+        runs-on:
+          - windows-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-rs/toolchain@v1
+        with:
+          profile: minimal
+          toolchain: stable
+          override: true
+      - uses: actions-rs/cargo@v1
+        with:
+          command: build
+          args: --release
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-artifact@v1
+        with:
+          name: ubpkg-${{ matrix.runs-on }}
+          path: target/release/ubpkg.exe
+
+  create-release:
+    needs: [build-release-linux,build-release-mac,build-release-windows]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date "+%Y-%m-%d_%H%M")"
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: release_${{ steps.date.outputs.date }}
+          release_name: Release ${{ steps.date.outputs.date }}
+      - name: Download Linux build
+        uses: actions/download-artifact@v1
+        with:
+          name: ubpkg-ubuntu-latest
+      - name: Download macOS build
+        uses: actions/download-artifact@v1
+        with:
+          name: ubpkg-macos-latest
+      - name: Download Windows build
+        uses: actions/download-artifact@v1
+        with:
+          name: ubpkg-windows-latest
+      - name: Upload Linux Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ubpkg-ubuntu-latest/ubpkg
+          asset_name: ubpkg-linux
+          asset_content_type: application/x-executable
+      - name: Upload macOS Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ubpkg-macos-latest/ubpkg
+          asset_name: ubpkg-macos
+          asset_content_type: application/x-executable
+      - name: Upload Windows Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ubpkg-windows-latest/ubpkg.exe
+          asset_name: ubpkg.exe
+          asset_content_type: application/x-executable
+    if: github.ref == 'refs/heads/master' && github.event_name == 'push'
