@@ -1,3 +1,5 @@
+use std::io::Read;
+
 use allocative::Allocative;
 use starlark::environment::GlobalsBuilder;
 use starlark::starlark_simple_value;
@@ -39,6 +41,18 @@ pub fn base(builder: &mut GlobalsBuilder) {
         std::fs::set_permissions(dest, perms).unwrap();
         Ok(0)
     }
+
+    fn download_asset(url: &str, max_size: u64) -> anyhow::Result<FileContents> {
+        let resp = ureq::get(url).call()?;
+        assert!(resp.has("Content-Length"));
+        let len: usize = resp.header("Content-Length").unwrap().parse()?;
+
+        let mut bytes: Vec<u8> = Vec::with_capacity(len);
+        resp.into_reader().take(max_size).read_to_end(&mut bytes)?;
+
+        Ok(FileContents { contents: bytes })
+    }
+
     fn extract_from_url(url: &str, path: &str) -> anyhow::Result<FileContents> {
         let path = path.to_string();
         let tmp_dir = tempdir::TempDir::new("ubpkg").unwrap();
@@ -46,11 +60,10 @@ pub fn base(builder: &mut GlobalsBuilder) {
         extracted_path.push(path.clone());
         let mut asset_path = tmp_dir.path().to_path_buf();
         asset_path.push(url.split('/').last().unwrap());
-        std::fs::write(
-            asset_path.clone(),
-            &reqwest::blocking::get(url).unwrap().bytes().unwrap(),
-        )
-        .unwrap();
+        std::io::copy(
+            &mut ureq::get(url).call()?.into_reader(),
+            &mut std::fs::File::create(asset_path.clone())?,
+        )?;
         let x = extracted_path.clone();
         decompress::decompress(
             asset_path,

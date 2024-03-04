@@ -22,9 +22,21 @@ impl std::fmt::Display for GitHubRepo {
 fn repo_methods(builder: &mut MethodsBuilder) {
     fn latest_release(#[starlark(this)] receiver: Value) -> anyhow::Result<GitHubRelease> {
         let repo = receiver.downcast_ref::<GitHubRepo>().unwrap();
+        let versions =
+            git::get_repo_sorted_versions(format!("https://github.com/{}.git", repo.id))?;
+        let last_version = versions
+            .iter()
+            .filter(|v| {
+                regex::Regex::new(r"^v[0-9]+\.[0-9]+\.[0-9]+$")
+                    .unwrap()
+                    .is_match(v)
+            })
+            .last()
+            .unwrap()
+            .to_string();
         Ok(GitHubRelease {
             github_repo: repo.clone(),
-            tag: git::get_repo_latest_version(format!("https://github.com/{}.git", repo.id))?,
+            tag: dbg!(last_version),
         })
     }
 }
