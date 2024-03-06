@@ -78,9 +78,23 @@ pub fn base(builder: &mut GlobalsBuilder) {
         let mut extracted_path = tmp_dir.path().to_path_buf();
         extracted_path.push(path.clone());
         let mut asset_path = tmp_dir.path().to_path_buf();
-        asset_path.push(url.split('/').last().unwrap());
+        let request = ureq::get(url).call()?;
+        if request
+            .header("content-disposition")
+            .is_some_and(|c| c.starts_with("attachment; filename="))
+        {
+            asset_path.push(
+                request
+                    .header("content-disposition")
+                    .unwrap()
+                    .strip_prefix("attachment; filename=")
+                    .unwrap(),
+            );
+        } else {
+            asset_path.push(url.split('/').last().unwrap());
+        }
         std::io::copy(
-            &mut ureq::get(url).call()?.into_reader(),
+            &mut request.into_reader(),
             &mut std::fs::File::create(asset_path.clone())?,
         )?;
         let x = extracted_path.clone();
