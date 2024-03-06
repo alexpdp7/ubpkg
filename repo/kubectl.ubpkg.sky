@@ -1,0 +1,13 @@
+stable_version = download_asset("https://cdn.dl.k8s.io/release/stable.txt", 16).as_string()
+
+os_str = {
+   "linux": "linux",
+   "macos": "darwin",
+}[os]
+
+arch_str = {
+    "x86_64": "amd64",
+    "aarch64": "arm64",
+}[arch]
+
+install_binary(download_asset("https://dl.k8s.io/release/{stable_version}/bin/{os_str}/{arch_str}/kubectl".format(stable_version=stable_version, os_str=os_str, arch_str=arch_str), 128*1024*1024), "kubectl")

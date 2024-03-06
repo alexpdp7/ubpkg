@@ -1,7 +1,9 @@
+#![allow(clippy::needless_lifetimes, clippy::unnecessary_wraps)] // starlark weirdness
+
 use std::io::Read;
 
 use allocative::Allocative;
-use starlark::environment::GlobalsBuilder;
+use starlark::environment::{GlobalsBuilder, Methods, MethodsBuilder, MethodsStatic};
 use starlark::starlark_simple_value;
 use starlark::values::{
     starlark_value, NoSerialize, ProvidesStaticType, StarlarkValue, Value, ValueLike,
@@ -19,8 +21,21 @@ impl std::fmt::Display for FileContents {
     }
 }
 
+#[starlark_module]
+fn file_contents_methods(builder: &mut MethodsBuilder) {
+    fn as_string(#[starlark(this)] receiver: Value) -> anyhow::Result<String> {
+        let file_contents = receiver.downcast_ref::<FileContents>().unwrap();
+        Ok(String::from_utf8(file_contents.contents.clone())?)
+    }
+}
+
 #[starlark_value(type = "file_contents")]
-impl<'v> StarlarkValue<'v> for FileContents {}
+impl<'v> StarlarkValue<'v> for FileContents {
+    fn get_methods() -> Option<&'static Methods> {
+        static RES: MethodsStatic = MethodsStatic::new();
+        RES.methods(file_contents_methods)
+    }
+}
 
 #[starlark_module]
 pub fn base(builder: &mut GlobalsBuilder) {
