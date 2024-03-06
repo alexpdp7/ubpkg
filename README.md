@@ -99,6 +99,11 @@ Feel free to create a PRs to add other tools, or to correct incorrect facts (I a
 * They require to alter your path with shims (I think).
 * Plugins seem to require bash (I think).
 
+#### WinGet
+
+Good eye, `ubpkg` is likely closer to WinGet.
+But WinGet is Windows-only.
+
 ### Is this a good idea?
 
 I do not know yet.
