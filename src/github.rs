@@ -29,7 +29,7 @@ fn repo_methods(builder: &mut MethodsBuilder) {
         let last_version = versions
             .iter()
             .filter(|v| {
-                regex::Regex::new(r"^v[0-9]+\.[0-9]+\.[0-9]+$")
+                regex::Regex::new(r"^v?[0-9]+(\.[0-9]+)*$")
                     .unwrap()
                     .is_match(v)
             })
