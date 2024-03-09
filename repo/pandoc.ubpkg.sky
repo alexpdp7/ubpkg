@@ -1,0 +1,23 @@
+gh = github_repo("jgm/pandoc")
+
+release = gh.latest_release()
+version_str = release.name().removeprefix("v")
+
+(os_str, arch_str) = {
+   ("macos", "aarch64"): ("macOS", "arm64"),
+   ("macos", "x86_64"): ("macOS", "amd64"),
+   ("linux", "x86_64"): ("linux", "amd64"),
+   ("linux", "aarch64"): ("linux", "arm64"),
+   ("windows", "x86_64"): ("windows", "x86_64"),
+}[(os, arch)]
+
+archive_format = {
+   "linux": "tar.gz",
+   "macos": "zip",
+   "windows": "zip",
+}[os]
+
+
+asset = release.get_asset_url("pandoc-{version_str}-{os_str}-{arch_str}.{archive_format}".format(version_str=version_str, os_str=os_str, arch_str=arch_str, archive_format=archive_format))
+
+install_binary(extract_from_url(asset, "pandoc-{version}/bin/pandoc".format(version=version_str)), "pandoc")
