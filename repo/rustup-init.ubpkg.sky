@@ -1,0 +1,9 @@
+os_str = {
+   "linux": "unknown-linux-gnu",
+   "macos": "apple-darwin",
+   "windows": "pc-windows-msvc",
+}[os]
+
+extension = ".exe" if os == "windows" else ""
+
+install_binary(download_asset("https://static.rust-lang.org/rustup/dist/{arch}-{os_str}/rustup-init{extension}".format(os_str=os_str, arch=arch, extension=extension), 32*1024*1024), "rustup-init")
