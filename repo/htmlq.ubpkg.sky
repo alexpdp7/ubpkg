@@ -1,0 +1,19 @@
+gh = github_repo("mgdm/htmlq")
+
+release = gh.latest_release()
+
+os_str = {
+   "linux": "linux",
+   "macos": "darwin",
+   "windows": "windows",
+}[os]
+
+archive_format = {
+   "linux": "tar.gz",
+   "macos": "tar.gz",
+   "windows": "zip",
+}[os]
+
+asset = release.get_asset_url("htmlq-x86_64-{os_str}.{archive_format}".format(os_str=os_str, archive_format=archive_format))
+
+install_binary(extract_from_url(asset, "htmlq"), "htmlq")
