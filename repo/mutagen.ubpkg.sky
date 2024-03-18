@@ -1,0 +1,19 @@
+gh = github_repo("mutagen-io/mutagen")
+
+release = gh.latest_release()
+version_str = release.name()
+
+os_str = {
+   "linux": "linux",
+   "macos": "darwin",
+   "windows": "windows",
+}[os]
+
+arch_str = {
+    "x86_64": "amd64",
+    "aarch64": "arm64",
+}[arch]
+
+asset = release.get_asset_url("mutagen_{os_str}_{arch_str}_{version_str}.tar.gz".format(os_str=os_str, arch_str=arch_str, version_str=version_str))
+install_binary(extract_from_url(asset, "mutagen"), "mutagen")
+install_binary(extract_from_url(asset, "mutagen-agents.tar.gz"), "mutagen-agents.tar.gz")
