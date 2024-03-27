@@ -157,17 +157,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Get current date
-        id: date
-        run: echo "::set-output name=date::$(date "+%Y-%m-%d_%H%M")"
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@latest
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: release_${{ steps.date.outputs.date }}
-          release_name: Release ${{ steps.date.outputs.date }}
       - name: Download Linux build
         uses: actions/download-artifact@v1
         with:
@@ -180,31 +169,13 @@ jobs:
         uses: actions/download-artifact@v1
         with:
           name: ubpkg-windows-latest
-      - name: Upload Linux Release Asset
-        uses: actions/upload-release-asset@v1
+      - name: Create release
+        run: |
+          mv ubpkg-ubuntu-latest/ubpkg ubpkg-linux
+          mv ubpkg-macos-latest/ubpkg ubpkg-macos
+          mv ubpkg-windows-latest/ubpkg.exe ubpkg.exe
+          d=$(date "+%Y-%m-%d_%H%M")
+          gh release create --generate-notes -t "Release $d" release_$d ubpkg-linux ubpkg-macos ubpkg.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ubpkg-ubuntu-latest/ubpkg
-          asset_name: ubpkg-linux
-          asset_content_type: application/x-executable
-      - name: Upload macOS Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ubpkg-macos-latest/ubpkg
-          asset_name: ubpkg-macos
-          asset_content_type: application/x-executable
-      - name: Upload Windows Release Asset
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ubpkg-windows-latest/ubpkg.exe
-          asset_name: ubpkg.exe
-          asset_content_type: application/x-executable
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
