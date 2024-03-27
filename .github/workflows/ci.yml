@@ -162,12 +162,10 @@ jobs:
         run: echo "::set-output name=date::$(date "+%Y-%m-%d_%H%M")"
       - name: Create Release
         id: create_release
-        uses: actions/create-release@latest
+        run:
+          gh release create --generate-notes -t "Release ${{ steps.date.outputs.date }}" release_${{ steps.date.outputs.date }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: release_${{ steps.date.outputs.date }}
-          release_name: Release ${{ steps.date.outputs.date }}
       - name: Download Linux build
         uses: actions/download-artifact@v1
         with:
