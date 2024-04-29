@@ -1,0 +1,22 @@
+gh = github_repo("ulyssa/iamb")
+
+release = gh.latest_release()
+
+rest = {
+   ("macos", "aarch64"): "aarch64-apple-darwin",
+   ("macos", "x86_64"): "x86_64-apple-darwin",
+   ("linux", "x86_64"): "x86_64-unknown-linux-musl",
+   ("windows", "x86_64"): "x86_64-pc-windows-msvc",
+}[(os, arch)]
+
+archive_format = {
+   "linux": "tgz",
+   "macos": "tgz",
+   "windows": "zip",
+}[os]
+
+
+
+asset = release.get_asset_url("iamb-{version}-{rest}.{archive_format}".format(version=release.name(), rest=rest, archive_format=archive_format))
+
+install_binary(extract_from_url(asset, "iamb-{version}-{rest}/iamb".format(version=release.name(), rest=rest)), "iamb")
