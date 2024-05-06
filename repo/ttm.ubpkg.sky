@@ -1,0 +1,19 @@
+# ttm requires musl!
+
+latest_release = get_repo_latest_version("https://gitlab.com/etke.cc/tools/ttm.git").removeprefix("v")
+
+os_str = {
+    "macos": "darwin",
+    "linux": "linux",
+    "freebsd": "freebsd",
+}[os]
+
+arch_str = {
+    "x86_64": "amd64",
+    "aarch64": "arm64",
+}[arch]
+
+
+url = "https://gitlab.com/etke.cc/tools/ttm/-/releases/v{release}/downloads/ttm_{release}_{os_str}_{arch_str}".format(release=latest_release, os_str=os_str, arch_str=arch_str)
+
+install_binary(download_asset(url, 8*1024*1024), "ttm")
