@@ -1,5 +1,3 @@
-# ttm requires musl!
-
 latest_release = get_repo_latest_version("https://gitlab.com/etke.cc/tools/ttm.git").removeprefix("v")
 
 os_str = {
