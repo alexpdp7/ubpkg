@@ -10,7 +10,7 @@ allocative = "0.3.3"
 anyhow = "1.0.86"
 clap = { version = "4.5.4", features = ["derive"] }
 color-eyre = "0.6.3"
-decompress = { version = "0.6.0", default-features = false, features = ["targz", "zip"] }
+decompress = { version = "0.6.0", default-features = false, features = ["targz", "zip", "gz"] }
 directories = "5.0.1"
 include_dir = "0.7.3"
 regex = "1.10.4"

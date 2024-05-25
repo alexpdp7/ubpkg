@@ -1,0 +1,20 @@
+gh = github_repo("astral-sh/rye")
+
+release = gh.latest_release()
+
+suffix = {
+   "linux": "gz",
+   "macos": "gz",
+}[os]
+
+arch_str = {
+    "x86_64": "amd64",
+    "aarch64": "arm64",
+}[arch]
+
+if os in ("linux", "macos"):
+    asset = release.get_asset_url("rye-{arch}-{os}.gz".format(os=os, arch=arch))
+    install_binary(extract_from_url(asset, "rye-{arch}-{os}".format(os=os, arch=arch)), "rye")
+elif os == "windows":
+    asset = release.get_asset_url("rye-{arch}-{os}.exe".format(os=os, arch=arch))
+    install_binary(download_asset(asset, 128*1024*1024), "rye")
