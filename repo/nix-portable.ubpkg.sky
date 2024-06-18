@@ -1,0 +1,7 @@
+gh = github_repo("DavHau/nix-portable")
+
+release = gh.latest_release()
+
+asset = release.get_asset_url("nix-portable-{arch}".format(arch=arch))
+
+install_binary(download_asset(asset, 128*1024*1024), "nix-portable")
