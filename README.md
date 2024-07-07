@@ -99,10 +99,10 @@ Feel free to create a PRs to add other tools, or to correct incorrect facts (I a
 * They require to alter your path with shims (I think).
 * Plugins seem to require bash (I think).
 
-#### WinGet
+#### WinGet / Homebrew Cask
 
-Good eye, `ubpkg` is likely closer to WinGet.
-But WinGet is Windows-only.
+Good eye, `ubpkg` is likely closer to WinGet and Homebrew Cask.
+However, both only support Windows and macOS, respectively.
 
 ### Is this a good idea?
 
