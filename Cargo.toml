@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 allocative = "0.3.3"
 anyhow = "1.0.86"
-clap = { version = "4.5.13", features = ["derive"] }
+clap = { version = "4.5.15", features = ["derive"] }
 color-eyre = "0.6.3"
 decompress = { version = "0.6.0", default-features = false, features = ["targz", "zip", "gz"] }
 directories = "5.0.1"
