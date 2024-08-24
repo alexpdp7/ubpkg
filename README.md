@@ -104,6 +104,12 @@ Feel free to create a PRs to add other tools, or to correct incorrect facts (I a
 Good eye, `ubpkg` is likely closer to WinGet and Homebrew Cask.
 However, both only support Windows and macOS, respectively.
 
+#### https://github.com/xplshn/dbin
+
+dbin uses [Toolpacks](https://github.com/Azathothas/Toolpacks), a project that builds statically linked binaries.
+Therefore, it does not use upstream binaries.
+dbin supports only Linux, although Toolpacks provides Windows binaries (but does not provide macOS binaries).
+
 ### Is this a good idea?
 
 I do not know yet.
