@@ -6,6 +6,7 @@ rest = {
    ("macos", "aarch64"): "aarch64-apple-darwin",
    ("macos", "x86_64"): "x86_64-apple-darwin",
    ("linux", "x86_64"): "x86_64-unknown-linux-musl",
+   ("linux", "aarch64"): "aarch64-unknown-linux-gnu",
    ("windows", "x86_64"): "x86_64-pc-windows-msvc",
 }[(os, arch)]
 
@@ -17,6 +18,6 @@ archive_format = {
 
 
 
-asset = release.get_asset_url("iamb-{version}-{rest}.{archive_format}".format(version=release.name(), rest=rest, archive_format=archive_format))
+asset = release.get_asset_url("iamb-{rest}.{archive_format}".format(version=release.name(), rest=rest, archive_format=archive_format))
 
-install_binary(extract_from_url(asset, "iamb-{version}-{rest}/iamb".format(version=release.name(), rest=rest)), "iamb")
+install_binary(extract_from_url(asset, "iamb-{rest}/iamb".format(version=release.name(), rest=rest)), "iamb")
