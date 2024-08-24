@@ -8,7 +8,7 @@
 ### Installation
 
 ```
-$ wget https://github.com/alexpdp7/ubpkg/releases/latest/download/ubpkg-linux -O ~/.local/bin/ubpkg  # or some other directory in your $PATH you can write to
+$ wget https://github.com/alexpdp7/ubpkg/releases/latest/download/ubpkg-linux-x86_64 -O ~/.local/bin/ubpkg  # or some other directory in your $PATH you can write to
 $ chmod +x ~/.local/bin/ubpkg
 ```
 
