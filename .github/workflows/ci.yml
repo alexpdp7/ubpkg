@@ -184,7 +184,7 @@ jobs:
           mv ubpkg-macos-latest/ubpkg ubpkg-macos
           mv ubpkg-windows-latest/ubpkg.exe ubpkg.exe
           d=$(date "+%Y-%m-%d_%H%M")
-          gh release create --generate-notes -t "Release $d" release_$d ubpkg-linux ubpkg-macos ubpkg.exe
+          gh release create --generate-notes -t "Release $d" release_$d ubpkg-linux-x86_64 ubpkg-linux-aarch64 ubpkg-macos ubpkg.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
