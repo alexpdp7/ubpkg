@@ -1,1 +1,4 @@
+if arch != "x86_64":
+   fail("Bitwarden only provides x86_64 binaries")
+
 install_binary(extract_from_url("https://vault.bitwarden.com/download/?app=cli&platform={os}".format(os=os), "bw"), "bw")
