@@ -1,3 +1,6 @@
+if arch != "x86_64":
+   fail("blahgeek/emacs-appimage only provides x86_64")
+
 gh = github_repo("blahgeek/emacs-appimage")
 
 release = gh.latest_release()
