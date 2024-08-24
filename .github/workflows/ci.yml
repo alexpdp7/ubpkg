@@ -76,6 +76,9 @@ jobs:
       matrix:
         runs-on:
           - ubuntu-latest
+        arch:
+          - x86_64
+          - aarch64
     steps:
       - uses: actions/checkout@v2
       - uses: actions-rs/toolchain@v1
@@ -83,18 +86,19 @@ jobs:
           profile: minimal
           toolchain: stable
           override: true
-          target: x86_64-unknown-linux-musl
-      - run: sudo apt install -y musl-tools
+          target: ${{ matrix.arch }}-unknown-linux-gnu
+      - run: sudo apt install -y gcc-aarch64-linux-gnu
+        if: "${{ matrix.arch == 'aarch64' }}"
       - uses: actions-rs/cargo@v1
         with:
           command: build
-          args: --release --target x86_64-unknown-linux-musl
+          args: --release --target ${{ matrix.arch }}-unknown-linux-gnu
       - name: Upload Release Asset
         id: upload-release-asset
         uses: actions/upload-artifact@v1
         with:
-          name: ubpkg-${{ matrix.runs-on }}
-          path: target/x86_64-unknown-linux-musl/release/ubpkg
+          name: ubpkg-${{ matrix.runs-on }}-${{ matrix.arch }}
+          path: target/${{ matrix.arch }}-unknown-linux-gnu/release/ubpkg
 
   build-release-mac:
     needs: [check, test, fmt, clippy]
@@ -157,10 +161,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Download Linux build
+      - name: Download Linux x86_64 build
         uses: actions/download-artifact@v1
         with:
-          name: ubpkg-ubuntu-latest
+          name: ubpkg-ubuntu-latest-x86_64
+      - name: Download Linux aarch64 build
+        uses: actions/download-artifact@v1
+        with:
+          name: ubpkg-ubuntu-latest-aarch64
       - name: Download macOS build
         uses: actions/download-artifact@v1
         with:
@@ -171,7 +179,8 @@ jobs:
           name: ubpkg-windows-latest
       - name: Create release
         run: |
-          mv ubpkg-ubuntu-latest/ubpkg ubpkg-linux
+          mv ubpkg-ubuntu-latest-x86_64/ubpkg ubpkg-linux-x86_64
+          mv ubpkg-ubuntu-latest-aarch64/ubpkg ubpkg-linux-aarch64
           mv ubpkg-macos-latest/ubpkg ubpkg-macos
           mv ubpkg-windows-latest/ubpkg.exe ubpkg.exe
           d=$(date "+%Y-%m-%d_%H%M")
