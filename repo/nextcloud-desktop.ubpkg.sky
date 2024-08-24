@@ -1,3 +1,6 @@
+if arch != "x86_64":
+   fail("Nextcloud only provides x86_64 app image")
+
 gh = github_repo("nextcloud-releases/desktop")
 
 release = gh.latest_release()
