@@ -1,3 +1,6 @@
+if arch != "x86_64":
+   fail("htmlq only provides x86_64 binaries")
+
 gh = github_repo("mgdm/htmlq")
 
 release = gh.latest_release()
