@@ -1,0 +1,12 @@
+gh = github_repo("lxc/incus")
+
+release = gh.latest_release()
+
+suffix = {
+   "linux": "",
+   "macos": "",
+   "windows": "exe",
+}[os]
+
+asset = release.get_asset_url("bin.{os}.incus.{arch}{suffix}".format(os=os, arch=arch, suffix=suffix))
+install_binary(download_asset(asset, 32*1024*1024), "incus")
