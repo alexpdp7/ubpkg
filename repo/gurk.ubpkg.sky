@@ -1,0 +1,12 @@
+gh = github_repo("boxdot/gurk-rs")
+
+release = gh.latest_release()
+
+os_str = {
+   "linux": "unknown-linux-musl",
+   "macos": "apple-darwin",
+}[os]
+
+asset = release.get_asset_url("gurk-{arch}-{os_str}.tar.gz".format(arch=arch, os_str=os_str))
+
+install_binary(extract_from_url(asset, "gurk"), "gurk")
