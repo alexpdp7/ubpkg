@@ -24,7 +24,7 @@ jobs:
       matrix:
         runs-on:
           - ubuntu-latest
-          - windows-latest
+#          - windows-latest
           - macos-latest
     steps:
       - uses: actions/checkout@v2
@@ -161,30 +161,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - name: Download Linux x86_64 build
+      - name: Download
         uses: actions/download-artifact@v4
-        with:
-          name: ubpkg-ubuntu-latest-x86_64
-      - name: Download Linux aarch64 build
-        uses: actions/download-artifact@v4
-        with:
-          name: ubpkg-ubuntu-latest-aarch64
-      - name: Download macOS build
-        uses: actions/download-artifact@v4
-        with:
-          name: ubpkg-macos-latest
-      - name: Download Windows build
-        uses: actions/download-artifact@v4
-        with:
-          name: ubpkg-windows-latest
       - name: Create release
         run: |
+          find
           mv ubpkg-ubuntu-latest-x86_64/ubpkg ubpkg-linux-x86_64
           mv ubpkg-ubuntu-latest-aarch64/ubpkg ubpkg-linux-aarch64
           mv ubpkg-macos-latest/ubpkg ubpkg-macos
           mv ubpkg-windows-latest/ubpkg.exe ubpkg.exe
           d=$(date "+%Y-%m-%d_%H%M")
-          gh release create --generate-notes -t "Release $d" release_$d ubpkg-linux-x86_64 ubpkg-linux-aarch64 ubpkg-macos ubpkg.exe
+#          gh release create --generate-notes -t "Release $d" release_$d ubpkg-linux-x86_64 ubpkg-linux-aarch64 ubpkg-macos ubpkg.exe
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+#    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
