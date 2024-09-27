@@ -162,19 +162,19 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Download Linux x86_64 build
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
         with:
           name: ubpkg-ubuntu-latest-x86_64
       - name: Download Linux aarch64 build
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
         with:
           name: ubpkg-ubuntu-latest-aarch64
       - name: Download macOS build
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
         with:
           name: ubpkg-macos-latest
       - name: Download Windows build
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v4
         with:
           name: ubpkg-windows-latest
       - name: Create release
