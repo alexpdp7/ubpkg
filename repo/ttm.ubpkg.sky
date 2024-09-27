@@ -1,17 +1,24 @@
-latest_release = get_repo_latest_version("https://gitlab.com/etke.cc/tools/ttm.git").removeprefix("v")
+gh = github_repo("etkecc/ttm")
+
+release = gh.latest_release()
 
 os_str = {
-    "macos": "darwin",
-    "linux": "linux",
-    "freebsd": "freebsd",
+    "macos": "Darwin",
+    "linux": "Linux",
+    "windows": "Windows",
 }[os]
 
 arch_str = {
-    "x86_64": "amd64",
+    "x86_64": "x86_64",
     "aarch64": "arm64",
 }[arch]
 
+archive_format = {
+   "linux": "tar.gz",
+   "macos": "tar.gz",
+   "windows": "zip",
+}[os]
 
-url = "https://gitlab.com/etke.cc/tools/ttm/-/releases/v{release}/downloads/ttm_{release}_{os_str}_{arch_str}".format(release=latest_release, os_str=os_str, arch_str=arch_str)
+asset = release.get_asset_url("ttm_{os_str}_{arch_str}.{archive_format}".format(os_str=os_str, arch_str=arch_str, archive_format=archive_format))
 
-install_binary(download_asset(url, 8*1024*1024), "ttm")
+install_binary(extract_from_url(asset, "ttm"), "ttm")
