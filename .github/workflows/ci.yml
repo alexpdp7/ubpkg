@@ -95,7 +95,7 @@ jobs:
           args: --release --target ${{ matrix.arch }}-unknown-linux-gnu
       - name: Upload Release Asset
         id: upload-release-asset
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: ubpkg-${{ matrix.runs-on }}-${{ matrix.arch }}
           path: target/${{ matrix.arch }}-unknown-linux-gnu/release/ubpkg
@@ -126,7 +126,7 @@ jobs:
       - run: lipo -create -output target/ubpkg target/x86_64-apple-darwin/release/ubpkg target/aarch64-apple-darwin/release/ubpkg
       - name: Upload Release Asset
         id: upload-release-asset
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: ubpkg-${{ matrix.runs-on }}
           path: target/ubpkg
@@ -151,7 +151,7 @@ jobs:
           args: --release
       - name: Upload Release Asset
         id: upload-release-asset
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: ubpkg-${{ matrix.runs-on }}
           path: target/release/ubpkg.exe
