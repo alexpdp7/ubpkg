@@ -112,4 +112,8 @@ pub fn base(builder: &mut GlobalsBuilder) {
             contents: std::fs::read(extracted_path).unwrap(),
         })
     }
+
+    fn fail(message: &str) -> anyhow::Result<i32> {
+        anyhow::bail!("{}", message.to_owned());
+    }
 }
