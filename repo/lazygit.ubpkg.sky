@@ -1,0 +1,26 @@
+gh = github_repo("jesseduffield/lazygit")
+
+release = gh.latest_release()
+
+os_str = {
+   "linux": "Linux",
+   "macos": "Darwin",
+   "windows": "Windows",
+}[os]
+
+arch_str = {
+    "x86_64": "x86_64",
+    "aarch64": "arm64",
+}[arch]
+
+archive_format = {
+   "linux": "tar.gz",
+   "macos": "tar.gz",
+   "windows": "zip",
+}[os]
+
+version_str = release.name().removeprefix("v")
+
+asset = release.get_asset_url("lazygit_{version_str}_{os_str}_{arch_str}.{archive_format}".format(version_str=version_str, os_str=os_str, arch_str=arch_str, archive_format=archive_format))
+
+install_binary(extract_from_url(asset, "lazygit"), "lazygit")
