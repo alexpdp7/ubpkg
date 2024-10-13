@@ -18,7 +18,7 @@ pub enum ExecutionError {
     RuntimeError(starlark::Error),
 }
 
-pub fn run_manifest(manifest: Manifest) -> Result<(), ExecutionError> {
+pub fn run_manifest(manifest: Manifest, version: Option<String>) -> Result<(), ExecutionError> {
     let ast: AstModule = AstModule::parse(&manifest.name, manifest.content, &Dialect::Extended)
         .map_err(ExecutionError::ParsingError)?;
 
@@ -28,6 +28,12 @@ pub fn run_manifest(manifest: Manifest) -> Result<(), ExecutionError> {
         .with(git::git);
     globals.set("os", std::env::consts::OS);
     globals.set("arch", std::env::consts::ARCH);
+    globals.set(
+        "version",
+        version.map_or(starlark::values::none::NoneOr::None, |version| {
+            starlark::values::none::NoneOr::Other(version)
+        }),
+    );
     let globals = globals.build();
     let module: Module = Module::new();
     let mut eval: Evaluator = Evaluator::new(&module);
