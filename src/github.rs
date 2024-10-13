@@ -41,6 +41,17 @@ fn repo_methods(builder: &mut MethodsBuilder) {
             tag: last_version,
         })
     }
+
+    fn release(
+        #[starlark(this)] receiver: Value,
+        version: String,
+    ) -> anyhow::Result<GitHubRelease> {
+        let repo = receiver.downcast_ref::<GitHubRepo>().unwrap();
+        Ok(GitHubRelease {
+            github_repo: repo.clone(),
+            tag: version,
+        })
+    }
 }
 
 #[starlark_value(type = "github_repo")]
