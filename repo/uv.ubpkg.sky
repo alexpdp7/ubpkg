@@ -1,0 +1,20 @@
+gh = github_repo("astral-sh/uv")
+
+release = gh.latest_release()
+
+os_str = {
+   "linux": "unknown-linux-gnu",
+   "macos": "apple-darwin",
+   "windows": "pc-windows-msvc",
+}[os]
+
+archive_format = {
+   "linux": "tar.gz",
+   "macos": "tar.gz",
+   "windows": "zip",
+}[os]
+
+asset = release.get_asset_url("uv-{arch}-{os_str}.{archive_format}".format(arch=arch, os_str=os_str, archive_format=archive_format))
+
+install_binary(extract_from_url(asset, "uv-{arch}-{os_str}/uv".format(arch=arch, os_str=os_str)), "uv")
+install_binary(extract_from_url(asset, "uv-{arch}-{os_str}/uvx".format(arch=arch, os_str=os_str)), "uvx")
