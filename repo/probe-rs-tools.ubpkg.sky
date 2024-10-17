@@ -1,0 +1,23 @@
+gh = github_repo("probe-rs/probe-rs")
+
+release = gh.latest_release()
+
+os_str = {
+   "linux": "unknown-linux-gnu",
+   "macos": "apple-darwin",
+   "windows": "pc-windows-msvc",
+}[os]
+
+archive_format = {
+   "linux": "tar.xz",
+   "macos": "tar.xz",
+   "windows": "zip",
+}[os]
+
+name = "probe-rs-tools-{arch}-{os_str}".format(arch=arch, os_str=os_str)
+
+asset = release.get_asset_url("{name}.{archive_format}".format(name=name, archive_format=archive_format))
+
+install_binary(extract_from_url(asset, "{name}/cargo-embed".format(name=name)), "cargo-embed")
+install_binary(extract_from_url(asset, "{name}/cargo-embed".format(name=name)), "cargo-flash")
+install_binary(extract_from_url(asset, "{name}/cargo-embed".format(name=name)), "probe-rs")
