@@ -86,7 +86,7 @@ Feel free to create a PRs to add other tools, or to correct incorrect facts (I a
 #### https://github.com/Rishang/install-release
 
 * `install-release` seems to target only GitHub releases.
-  Right now `ubpkg` has only packages from GitHub releases, although it has functions that could install software from other sources.
+  `ubpkg` has packages from sources other than GitHub releases.
 * I'm not sure `install-release` has a good strategy to handle the different ways binaries are packaged in GitHub releases (e.g. different naming conventions, archive formats, etc.)
 
 #### https://github.com/alexellis/arkade/
