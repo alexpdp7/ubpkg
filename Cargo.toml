@@ -6,7 +6,7 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-allocative = "0.3.3"
+allocative = "0.3.4"
 anyhow = "1.0.94"
 clap = { version = "4.5.23", features = ["derive"] }
 color-eyre = "0.6.3"
@@ -16,6 +16,6 @@ include_dir = "0.7.4"
 regex = "1.11.1"
 starlark = "0.12.0"
 tempdir = "0.3.7"
-thiserror = "2.0.6"
+thiserror = "2.0.7"
 ureq = "2.12.1"
 vsort = "0.2.0"
