@@ -11,7 +11,7 @@ anyhow = "1.0.95"
 clap = { version = "4.5.26", features = ["derive"] }
 color-eyre = "0.6.3"
 decompress = { version = "0.6.0", default-features = false, features = ["targz", "zip", "gz", "tarxz"] }
-directories = "5.0.1"
+directories = "6.0.0"
 include_dir = "0.7.4"
 regex = "1.11.1"
 starlark = "0.13.0"
