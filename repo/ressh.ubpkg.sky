@@ -1,0 +1,12 @@
+gh = github_repo("alexpdp7/ressh")
+
+release = gh.latest_release()
+
+suffix = {
+   "linux": "-linux-x86_64",
+   "macos": "-macos",
+   "windows": ".exe",
+}[os]
+
+asset = release.get_asset_url("ressh{suffix}".format(suffix=suffix))
+install_binary(download_asset(asset, 1024*1024), "ressh")
