@@ -62,12 +62,21 @@ pub fn base(builder: &mut GlobalsBuilder) {
     }
 
     fn download_asset(url: &str, max_size: u64) -> anyhow::Result<FileContents> {
-        let resp = ureq::get(url).call()?;
-        assert!(resp.has("Content-Length"));
-        let len: usize = resp.header("Content-Length").unwrap().parse()?;
+        let mut resp = ureq::get(url).call()?;
+        assert!(resp.headers().contains_key("Content-Length"));
+        let len: usize = resp
+            .headers()
+            .get("Content-Length")
+            .unwrap()
+            .to_str()
+            .unwrap()
+            .parse()?;
 
         let mut bytes: Vec<u8> = Vec::with_capacity(len);
-        resp.into_reader().take(max_size).read_to_end(&mut bytes)?;
+        resp.body_mut()
+            .as_reader()
+            .take(max_size)
+            .read_to_end(&mut bytes)?;
 
         Ok(FileContents { contents: bytes })
     }
@@ -78,23 +87,19 @@ pub fn base(builder: &mut GlobalsBuilder) {
         let mut extracted_path = tmp_dir.path().to_path_buf();
         extracted_path.push(path.clone());
         let mut asset_path = tmp_dir.path().to_path_buf();
-        let request = ureq::get(url).call()?;
-        if request
-            .header("content-disposition")
-            .is_some_and(|c| c.starts_with("attachment; filename="))
+        let mut request = ureq::get(url).call()?;
+        let attachment_prefix = "attachment; filename=";
+        if let Some(content_disposition) = request
+            .headers()
+            .get("content-disposition")
+            .map(|c| c.to_str().unwrap())
         {
-            asset_path.push(
-                request
-                    .header("content-disposition")
-                    .unwrap()
-                    .strip_prefix("attachment; filename=")
-                    .unwrap(),
-            );
+            asset_path.push(content_disposition.strip_prefix(attachment_prefix).unwrap());
         } else {
             asset_path.push(url.split('/').last().unwrap());
         }
         std::io::copy(
-            &mut request.into_reader(),
+            &mut request.body_mut().as_reader(),
             &mut std::fs::File::create(asset_path.clone())?,
         )?;
         let x = extracted_path.clone();
