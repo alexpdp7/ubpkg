@@ -8,7 +8,7 @@ edition = "2021"
 [dependencies]
 allocative = "0.3.4"
 anyhow = "1.0.95"
-clap = { version = "4.5.27", features = ["derive"] }
+clap = { version = "4.5.29", features = ["derive"] }
 color-eyre = "0.6.3"
 decompress = { version = "0.6.0", default-features = false, features = ["targz", "zip", "gz", "tarxz"] }
 directories = "6.0.0"
@@ -17,5 +17,5 @@ regex = "1.11.1"
 starlark = "0.13.0"
 tempdir = "0.3.7"
 thiserror = "2.0.11"
-ureq = "3.0.2"
+ureq = "3.0.5"
 vsort = "0.2.0"
