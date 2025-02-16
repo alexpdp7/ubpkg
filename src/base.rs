@@ -83,7 +83,7 @@ pub fn base(builder: &mut GlobalsBuilder) {
 
     fn extract_from_url(url: &str, path: &str) -> anyhow::Result<FileContents> {
         let path = path.to_string();
-        let tmp_dir = tempdir::TempDir::new("ubpkg").unwrap();
+        let tmp_dir = tempfile::TempDir::new().unwrap();
         let mut extracted_path = tmp_dir.path().to_path_buf();
         extracted_path.push(path.clone());
         let mut asset_path = tmp_dir.path().to_path_buf();
