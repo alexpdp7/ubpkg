@@ -3,6 +3,7 @@
 use std::io::Read;
 
 use allocative::Allocative;
+use anyhow::Context;
 use starlark::environment::{GlobalsBuilder, Methods, MethodsBuilder, MethodsStatic};
 use starlark::starlark_simple_value;
 use starlark::values::{
@@ -87,7 +88,9 @@ pub fn base(builder: &mut GlobalsBuilder) {
         let mut extracted_path = tmp_dir.path().to_path_buf();
         extracted_path.push(path.clone());
         let mut asset_path = tmp_dir.path().to_path_buf();
-        let mut request = ureq::get(url).call()?;
+        let mut request = ureq::get(url)
+            .call()
+            .with_context(|| format!("Error getting {url}"))?;
         let attachment_prefix = "attachment; filename=";
         if let Some(content_disposition) = request
             .headers()
