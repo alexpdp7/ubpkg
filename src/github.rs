@@ -22,16 +22,23 @@ impl std::fmt::Display for GitHubRepo {
 
 #[starlark_module]
 fn repo_methods(builder: &mut MethodsBuilder) {
-    fn latest_release(#[starlark(this)] receiver: Value) -> anyhow::Result<GitHubRelease> {
+    fn latest_release(
+        #[starlark(this)] receiver: Value,
+        regex: Option<String>,
+    ) -> anyhow::Result<GitHubRelease> {
         let repo = receiver.downcast_ref::<GitHubRepo>().unwrap();
         let versions =
             git::get_repo_sorted_versions(format!("https://github.com/{}.git", repo.id))?;
         let last_version = versions
             .iter()
             .filter(|v| {
-                regex::Regex::new(r"^v?[0-9]+([.-][0-9]+)*$")
-                    .unwrap()
-                    .is_match(v)
+                regex::Regex::new(
+                    &regex
+                        .clone()
+                        .unwrap_or(r"^v?[0-9]+([.-][0-9]+)*$".to_owned()),
+                )
+                .unwrap()
+                .is_match(v)
             })
             .last()
             .unwrap()
