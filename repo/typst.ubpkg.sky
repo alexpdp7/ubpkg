@@ -1,0 +1,21 @@
+gh = github_repo("typst/typst")
+
+release = gh.latest_release("^v[0-9]+\.[0-9]+\.[0-9]+$")
+
+rest = {
+   ("macos", "aarch64"): "aarch64-apple-darwin",
+   ("macos", "x86_64"): "x86_64-apple-darwin",
+   ("linux", "x86_64"): "x86_64-unknown-linux-musl",
+   ("linux", "aarch64"): "aarch64-unknown-linux-musl",
+   ("windows", "x86_64"): "x86_64-pc-windows-msvc",
+}[(os, arch)]
+
+archive_format = {
+   "linux": "tar.xz",
+   "macos": "tar.xz",
+   "windows": "zip",
+}[os]
+
+asset = release.get_asset_url("typst-{rest}.{archive_format}".format(rest=rest, archive_format=archive_format))
+
+install_binary(extract_from_url(asset, "typst-{rest}/typst".format(rest=rest)), "typst")
