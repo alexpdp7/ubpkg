@@ -1,0 +1,20 @@
+gh = github_repo("pnpm/pnpm")
+
+release = gh.latest_release()
+
+arch_str = {
+    "x86_64": "x64",
+    "aarch64": "arm64",
+}[arch]
+
+
+os_str = {
+   "linux": "linux",
+   "macos": "macos",
+   "windows": "win",
+}[os]
+
+extension = ".exe" if os == "windows" else ""
+
+asset = release.get_asset_url("pnpm-{os_str}-{arch_str}{extension}".format(os_str=os_str, arch_str=arch_str, extension=extension))
+install_binary(download_asset(asset, 128*1024*1024), "pnpm")

@@ -63,7 +63,9 @@ pub fn base(builder: &mut GlobalsBuilder) {
     }
 
     fn download_asset(url: &str, max_size: u64) -> anyhow::Result<FileContents> {
-        let mut resp = ureq::get(url).call()?;
+        let mut resp = ureq::get(url)
+            .call()
+            .with_context(|| format!("Error getting {url}"))?;
         assert!(resp.headers().contains_key("Content-Length"));
         let len: usize = resp
             .headers()
