@@ -1,0 +1,7 @@
+gh = github_repo("Schniz/fnm")
+
+release = gh.latest_release()
+
+asset = release.get_asset_url("fnm-{os}.zip".format(os=os))
+
+install_binary(extract_from_url(asset, "fnm"), "fnm")
