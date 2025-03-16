@@ -1,0 +1,12 @@
+gh = github_repo("alexpdp7/djot-log")
+
+release = gh.latest_release("[0-9]{4}-[0-9]{2}-[0-9]{2}_[0-9]{4}")
+
+suffix = {
+   "linux": "-linux-x86_64",
+   "macos": "-macos",
+   "windows": ".exe",
+}[os]
+
+asset = release.get_asset_url("djot-log{suffix}".format(suffix=suffix))
+install_binary(download_asset(asset, 16*1024*1024), "djot-log")
