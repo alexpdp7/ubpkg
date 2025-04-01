@@ -119,7 +119,8 @@ pub fn base(builder: &mut GlobalsBuilder) {
         .unwrap();
 
         Ok(FileContents {
-            contents: std::fs::read(extracted_path).unwrap(),
+            contents: std::fs::read(&extracted_path)
+                .with_context(|| format!("{extracted_path:?} not found in archive at {url}"))?,
         })
     }
 
