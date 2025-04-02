@@ -1,0 +1,8 @@
+rest = {
+   ("macos", "aarch64"): "macos-aarch64",
+   ("macos", "x86_64"): "macos",
+   ("linux", "x86_64"): "amd64",
+   ("linux", "aarch64"): "aarch64",
+}[(os, arch)]
+
+install_binary(download_asset("https://builds.clickhouse.com/master/amd64/clickhouse".format(rest=rest), 1024*1024*1024), "clickhouse")
