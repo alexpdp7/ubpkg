@@ -110,6 +110,13 @@ dbin uses [Toolpacks](https://github.com/Azathothas/Toolpacks), a project that b
 Therefore, it does not use upstream binaries.
 dbin supports only Linux, although Toolpacks provides Windows binaries (but does not provide macOS binaries).
 
+#### https://github.com/cargo-bins/cargo-binstall / https://github.com/cargo-bins/cargo-quickinstall
+
+`binstall` searches binaries associated with Rust crates and falls back to `quickinstall`.
+`quickinstall` has its own binary repository; when you request a crate not in their repository or outdated, they trigger a build.
+
+`binstall`/`quickinstall` should ensure up-to-date binaries, but they only apply to Rust crates.
+
 ### Is this a good idea?
 
 I do not know yet.
