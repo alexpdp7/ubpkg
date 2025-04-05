@@ -40,7 +40,7 @@ fn repo_methods(builder: &mut MethodsBuilder) {
                 .unwrap()
                 .is_match(v)
             })
-            .last()
+            .next_back()
             .unwrap()
             .to_string();
         Ok(GitHubRelease {

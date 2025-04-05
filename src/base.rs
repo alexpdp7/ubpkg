@@ -101,7 +101,7 @@ pub fn base(builder: &mut GlobalsBuilder) {
         {
             asset_path.push(content_disposition.strip_prefix(attachment_prefix).unwrap());
         } else {
-            asset_path.push(url.split('/').last().unwrap());
+            asset_path.push(url.split('/').next_back().unwrap());
         }
         std::io::copy(
             &mut request.body_mut().as_reader(),
