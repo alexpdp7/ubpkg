@@ -1,4 +1,8 @@
-#![allow(clippy::needless_lifetimes, clippy::unnecessary_wraps)] // starlark weirdness
+#![allow(
+    clippy::needless_lifetimes,
+    clippy::unnecessary_wraps,
+    clippy::elidable_lifetime_names
+)] // starlark weirdness
 
 use allocative::Allocative;
 use starlark::environment::{GlobalsBuilder, Methods, MethodsBuilder, MethodsStatic};
