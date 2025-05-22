@@ -1,4 +1,8 @@
-#![allow(clippy::needless_lifetimes, clippy::unnecessary_wraps)] // starlark weirdness
+#![allow(
+    clippy::needless_lifetimes,
+    clippy::unnecessary_wraps,
+    clippy::elidable_lifetime_names
+)] // starlark weirdness
 
 use std::io::Read;
 
@@ -119,8 +123,9 @@ pub fn base(builder: &mut GlobalsBuilder) {
         .unwrap();
 
         Ok(FileContents {
-            contents: std::fs::read(&extracted_path)
-                .with_context(|| format!("{extracted_path:?} not found in archive at {url}"))?,
+            contents: std::fs::read(&extracted_path).with_context(|| {
+                format!("{} not found in archive at {url}", extracted_path.display())
+            })?,
         })
     }
 
