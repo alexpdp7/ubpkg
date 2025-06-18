@@ -1,0 +1,19 @@
+gh = github_repo("microsoft/edit")
+
+release = gh.latest_release()
+
+os_str = {
+   "linux": "linux-gnu",
+   "windows": "windows",
+}[os]
+
+archive_format = {
+   "linux": "tar.zst",
+   "windows": "zip",
+}[os]
+
+version_str = release.name().removeprefix("v")
+
+asset = release.get_asset_url("edit-{version_str}-{arch}-{os_str}.{archive_format}".format(arch=arch, os_str=os_str, archive_format=archive_format, version_str=version_str))
+
+install_binary(extract_from_url(asset, "edit"), "edit")
