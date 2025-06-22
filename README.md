@@ -83,9 +83,9 @@ Feel free to create a PRs to add other tools, or to correct incorrect facts (I a
 * Homebrew does not have an inclusive design for Windows.
 * Homebrew modifies `/usr/local`, `ubpkg` stays strictly in your home directory.
 
-#### https://github.com/Rishang/install-release
+#### https://github.com/Rishang/install-release / https://github.com/zyedidia/eget
 
-* `install-release` seems to target only GitHub releases.
+* `install-release` and `eget` seem to target only GitHub releases.
   `ubpkg` has packages from sources other than GitHub releases.
 * I'm not sure `install-release` has a good strategy to handle the different ways binaries are packaged in GitHub releases (e.g. different naming conventions, archive formats, etc.)
 
