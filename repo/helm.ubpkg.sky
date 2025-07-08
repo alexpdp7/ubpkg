@@ -1,0 +1,23 @@
+gh = github_repo("helm/helm")
+
+release = gh.latest_release()
+
+os_str = {
+   "linux": "linux",
+   "macos": "darwin",
+   "windows": "windows",
+}[os]
+
+arch_str = {
+    "x86_64": "amd64",
+    "aarch64": "arm64",
+}[arch]
+
+archive_format = {
+   "linux": "tar.gz",
+   "macos": "tar.gz",
+   "windows": "zip",
+}[os]
+
+
+install_binary(extract_from_url("https://get.helm.sh/helm-{version}-{os_str}-{arch_str}.{archive_format}".format(os_str=os_str, arch_str=arch_str, version=release.name(), archive_format=archive_format), "helm"), "helm")
