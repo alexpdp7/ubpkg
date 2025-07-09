@@ -1,0 +1,17 @@
+gh = github_repo("gruntwork-io/terragrunt")
+
+release = gh.latest_release()
+
+os_str = {
+   "linux": "linux",
+   "macos": "darwin",
+   "windows": "windows",
+}[os]
+
+arch_str = {
+    "x86_64": "amd64",
+    "aarch64": "arm64",
+}[arch]
+
+asset = release.get_asset_url("terragrunt_{os_str}_{arch_str}".format(os_str=os_str, arch_str=arch_str))
+install_binary(download_asset(asset, 128*1024*1024), "terragrunt")
