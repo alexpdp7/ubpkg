@@ -1,0 +1,19 @@
+gh = github_repo("kubernetes-sigs/cloud-provider-kind")
+
+release = gh.latest_release()
+version_str = release.name().removeprefix("v")
+
+os_str = {
+   "linux": "linux",
+   "macos": "darwin",
+   "windows": "windows",
+}[os]
+
+arch_str = {
+    "x86_64": "amd64",
+    "aarch64": "arm64",
+}[arch]
+
+asset = release.get_asset_url("cloud-provider-kind_{version_str}_{os_str}_{arch_str}.tar.gz".format(version_str=version_str, os_str=os_str, arch_str=arch_str))
+
+install_binary(extract_from_url(asset, "cloud-provider-kind"), "cloud-provider-kind")
