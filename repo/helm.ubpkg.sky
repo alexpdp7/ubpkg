@@ -20,4 +20,4 @@ archive_format = {
 }[os]
 
 
-install_binary(extract_from_url("https://get.helm.sh/helm-{version}-{os_str}-{arch_str}.{archive_format}".format(os_str=os_str, arch_str=arch_str, version=release.name(), archive_format=archive_format), "helm"), "helm")
+install_binary(extract_from_url("https://get.helm.sh/helm-{version}-{os_str}-{arch_str}.{archive_format}".format(os_str=os_str, arch_str=arch_str, version=release.name(), archive_format=archive_format), "{os_str}-{arch_str}/helm".format(os_str=os_str, arch_str=arch_str)), "helm")
