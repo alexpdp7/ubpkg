@@ -103,7 +103,11 @@ pub fn base(builder: &mut GlobalsBuilder) {
             .get("content-disposition")
             .map(|c| c.to_str().unwrap())
         {
-            asset_path.push(content_disposition.strip_prefix(attachment_prefix).unwrap());
+            if content_disposition.starts_with(attachment_prefix) {
+                asset_path.push(content_disposition.strip_prefix(attachment_prefix).unwrap());
+            } else {
+                asset_path.push(url.split('/').next_back().unwrap());
+            }
         } else {
             asset_path.push(url.split('/').next_back().unwrap());
         }
