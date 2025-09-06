@@ -104,6 +104,10 @@ Feel free to create a PRs to add other tools, or to correct incorrect facts (I a
 Good eye, `ubpkg` is likely closer to WinGet and Homebrew Cask.
 However, both only support Windows and macOS, respectively.
 
+#### https://github.com/taiki-e/install-action
+
+install-action has similar manifests, supports all operating systems, but does not fetch the latest version automatically.
+
 #### https://github.com/xplshn/dbin
 
 dbin uses [Toolpacks](https://github.com/Azathothas/Toolpacks), a project that builds statically linked binaries.
