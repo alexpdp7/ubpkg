@@ -1,0 +1,27 @@
+gh = github_repo("mitmproxy/mitmproxy")
+
+release = gh.latest_release()
+
+os_str = {
+   "linux": "unknown-linux-gnu",
+   "macos": "apple-darwin",
+   "windows": "pc-windows-msvc",
+}[os]
+
+extension = {
+    "linux": "tar.gz",
+    "macos": "tar.gz",
+    "windows": "zip",
+}[os]
+
+arch_str = {
+    ("linux", "x86_64"): "x86_64",
+    ("linux", "aarch64"): "aarch64",
+    ("macos", "x86_64"): "x86_64",
+    ("macos", "aarch64"): "arm64",
+    ("windows", "x86_64"): "x86_64",
+}[(os, arch)]
+
+version_str = release.name().removeprefix("v")
+
+install_binary(extract_from_url("https://downloads.mitmproxy.org/{version_str}/mitmproxy-{version_str}-{os}-{arch_str}.{extension}".format(os=os, arch_str=arch_str, extension=extension, version_str=version_str), "mitmproxy"), "mitmproxy")
