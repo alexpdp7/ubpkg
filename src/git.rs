@@ -38,7 +38,7 @@ pub fn get_repo_sorted_versions(url: String) -> Result<Vec<String>, Error> {
 
 #[allow(clippy::missing_panics_doc)]
 pub fn get_repo_latest_version(url: String) -> Result<String, Error> {
-    Ok(get_repo_sorted_versions(url)?.last().unwrap().to_string())
+    Ok(get_repo_sorted_versions(url)?.last().unwrap().clone())
 }
 
 #[starlark_module]
