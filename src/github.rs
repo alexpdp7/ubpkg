@@ -46,7 +46,7 @@ fn repo_methods(builder: &mut MethodsBuilder) {
             })
             .next_back()
             .unwrap()
-            .to_string();
+            .clone();
         Ok(GitHubRelease {
             github_repo: repo.clone(),
             tag: last_version,
