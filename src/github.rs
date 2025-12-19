@@ -35,7 +35,7 @@ fn repo_methods(builder: &mut MethodsBuilder) {
             git::get_repo_sorted_versions(format!("https://github.com/{}.git", repo.id))?;
         let last_version = versions
             .iter()
-            .filter(|v| {
+            .rfind(|v| {
                 regex::Regex::new(
                     &regex
                         .clone()
@@ -44,7 +44,6 @@ fn repo_methods(builder: &mut MethodsBuilder) {
                 .unwrap()
                 .is_match(v)
             })
-            .next_back()
             .unwrap()
             .clone();
         Ok(GitHubRelease {
