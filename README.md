@@ -121,6 +121,11 @@ dbin supports only Linux, although Toolpacks provides Windows binaries (but does
 
 `binstall`/`quickinstall` should ensure up-to-date binaries, but they only apply to Rust crates.
 
+#### https://pkgforge.dev/
+
+PkgForge seems to be a massive packaging ecosystem with many different kinds of packages that I think includes upstream binaries.
+PkgForge looks interesting, but daunting.
+
 ### Is this a good idea?
 
 I do not know yet.
