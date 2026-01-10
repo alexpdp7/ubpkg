@@ -1,0 +1,25 @@
+gh = github_repo("caddyserver/caddy")
+
+release = gh.latest_release()
+version_str = release.name().removeprefix("v")
+
+os_str = {
+   "linux": "linux",
+   "macos": "mac",
+   "windows": "windows",
+}[os]
+
+arch_str = {
+    "x86_64": "amd64",
+    "aarch64": "arm64",
+}[arch]
+
+archive_format = {
+   "linux": "tar.gz",
+   "macos": "tar.gz",
+   "windows": "zip",
+}[os]
+
+asset = release.get_asset_url("caddy_{version_str}_{os_str}_{arch_str}.{archive_format}".format(version_str=version_str, os_str=os_str, arch_str=arch_str, archive_format=archive_format))
+
+install_binary(extract_from_url(asset, "caddy"), "caddy")
