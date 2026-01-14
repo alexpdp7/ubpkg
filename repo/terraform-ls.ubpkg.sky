@@ -1,0 +1,18 @@
+gh = github_repo("hashicorp/terraform-ls")
+
+release = gh.latest_release()
+
+os_str = {
+   "linux": "linux",
+   "macos": "darwin",
+   "windows": "windows",
+}[os]
+
+arch_str = {
+    "x86_64": "amd64",
+    "aarch64": "arm64",
+}[arch]
+
+version_str = release.name().removeprefix("v")
+
+install_binary(extract_from_url("https://releases.hashicorp.com/terraform-ls/{version_str}/terraform-ls_{version_str}_{os_str}_{arch_str}.zip".format(os_str=os_str, arch_str=arch_str, version_str=version_str), "terraform-ls"), "terraform-ls")
