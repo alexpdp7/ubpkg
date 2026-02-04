@@ -13,7 +13,7 @@ color-eyre = "0.6.5"
 decompress = { version = "0.6.0", default-features = false, features = ["targz", "zip", "gz", "tarxz", "tarzst"] }
 directories = "6.0.0"
 include_dir = "0.7.4"
-regex = "1.12.2"
+regex = "1.12.3"
 starlark = "0.13.0"
 tempfile = "3.24.0"
 thiserror = "2.0.18"
