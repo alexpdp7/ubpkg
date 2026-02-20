@@ -1,4 +1,4 @@
-stable_version = download_asset("https://cdn.dl.k8s.io/release/stable.txt", 16).as_string()
+stable_version = download_asset("https://dl.k8s.io/release/stable.txt", 16).as_string()
 
 os_str = {
    "linux": "linux",
