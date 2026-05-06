@@ -1,0 +1,15 @@
+gh = github_repo("vi/websocat")
+
+release = gh.latest_release()
+
+rest = {
+   ("macos", "aarch64"): "aarch64-apple-darwin",
+   ("macos", "x86_64"): "x86_64-apple-darwin",
+   ("linux", "x86_64"): "x86_64-unknown-linux-musl",
+   ("linux", "aarch64"): "aarch64-unknown-linux-musl",
+   ("windows", "x86_64"): "x86_64-pc-windows-gnu.exe",
+}[(os, arch)]
+
+asset = release.get_asset_url("websocat.{rest}".format(rest=rest))
+
+install_binary(download_asset(asset, 16*1024*1024), "websocat")
