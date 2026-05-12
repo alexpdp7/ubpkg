@@ -1,0 +1,9 @@
+gh = github_repo("nix-community/nix-user-chroot")
+
+release = gh.latest_release()
+
+version = gh.latest_release().name()
+
+asset = release.get_asset_url("nix-user-chroot-bin-{version}-{arch}-unknown-linux-musl".format(version=version, arch=arch))
+
+install_binary(download_asset(asset, 2*1024*1024), "nix-user-chroot")
