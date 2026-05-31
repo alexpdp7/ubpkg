@@ -1,7 +1,6 @@
 use starlark::environment::{GlobalsBuilder, Module};
 use starlark::eval::Evaluator;
 use starlark::syntax::{AstModule, Dialect};
-use starlark::values::Value;
 
 use thiserror::Error;
 
@@ -35,10 +34,10 @@ pub fn run_manifest(manifest: Manifest, version: Option<String>) -> Result<(), E
         }),
     );
     let globals = globals.build();
-    let module: Module = Module::new();
-    let mut eval: Evaluator = Evaluator::new(&module);
-    let _res: Value = eval
-        .eval_module(ast, &globals)
-        .map_err(ExecutionError::RuntimeError)?;
+    Module::with_temp_heap(|module| {
+        let mut eval: Evaluator = Evaluator::new(&module);
+        eval.eval_module(ast, &globals).map(|_| ())
+    })
+    .map_err(ExecutionError::RuntimeError)?;
     Ok(())
 }
