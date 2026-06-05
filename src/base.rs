@@ -8,7 +8,7 @@ use std::io::Read;
 
 use allocative::Allocative;
 use anyhow::Context;
-use starlark::environment::{GlobalsBuilder, Methods, MethodsBuilder, MethodsStatic};
+use starlark::environment::{GlobalsBuilder, Methods, MethodsBuilder};
 use starlark::starlark_simple_value;
 use starlark::values::{
     starlark_value, NoSerialize, ProvidesStaticType, StarlarkValue, Value, ValueLike,
@@ -34,11 +34,12 @@ fn file_contents_methods(builder: &mut MethodsBuilder) {
     }
 }
 
+starlark::methods_static!(FILECONTENTS_METHODS = file_contents_methods);
+
 #[starlark_value(type = "file_contents")]
 impl<'v> StarlarkValue<'v> for FileContents {
     fn get_methods() -> Option<&'static Methods> {
-        static RES: MethodsStatic = MethodsStatic::new();
-        RES.methods(file_contents_methods)
+        Some(FILECONTENTS_METHODS.methods())
     }
 }
 

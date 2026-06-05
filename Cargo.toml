@@ -14,7 +14,7 @@ decompress = { version = "0.6.0", default-features = false, features = ["targz",
 directories = "6.0.0"
 include_dir = "0.7.4"
 regex = "1.12.3"
-starlark = "0.14.0"
+starlark = "0.14.2"
 tempfile = "3.27.0"
 thiserror = "2.0.18"
 ureq = "3.3.0"
