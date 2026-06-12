@@ -5,7 +5,7 @@
 )] // starlark weirdness
 
 use allocative::Allocative;
-use starlark::environment::{GlobalsBuilder, Methods, MethodsBuilder, MethodsStatic};
+use starlark::environment::{GlobalsBuilder, Methods, MethodsBuilder};
 use starlark::values::{
     starlark_value, NoSerialize, ProvidesStaticType, StarlarkValue, Value, ValueLike,
 };
@@ -64,11 +64,12 @@ fn repo_methods(builder: &mut MethodsBuilder) {
     }
 }
 
+starlark::methods_static!(REPO_METHODS = repo_methods);
+
 #[starlark_value(type = "github_repo")]
 impl<'v> StarlarkValue<'v> for GitHubRepo {
     fn get_methods() -> Option<&'static Methods> {
-        static RES: MethodsStatic = MethodsStatic::new();
-        RES.methods(repo_methods)
+        Some(REPO_METHODS.methods())
     }
 }
 
@@ -101,11 +102,12 @@ fn release_methods(builder: &mut MethodsBuilder) {
     }
 }
 
+starlark::methods_static!(RELEASE_METHODS = release_methods);
+
 #[starlark_value(type = "github_release")]
 impl<'v> StarlarkValue<'v> for GitHubRelease {
     fn get_methods() -> Option<&'static Methods> {
-        static RES: MethodsStatic = MethodsStatic::new();
-        RES.methods(release_methods)
+        Some(RELEASE_METHODS.methods())
     }
 }
 
