@@ -1,0 +1,7 @@
+latest_release = get_repo_latest_version("https://codeberg.org/neurocyte/flow.git")
+
+extension = "zip" if os == "windows" else "tar.gz"
+
+url = "https://codeberg.org/neurocyte/flow/releases/download/{latest_release}/flow-{latest_release}-{os}-{arch}.{extension}".format(latest_release=latest_release, os=os, arch=arch, extension=extension)
+
+install_binary(extract_from_url(url, "flow"), "flow")
