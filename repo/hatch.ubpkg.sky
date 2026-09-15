@@ -1,0 +1,17 @@
+gh = github_repo("pypa/hatch")
+
+release = gh.latest_release("hatch-v.*")
+
+os_str = {
+   "linux": "unknown-linux-gnu",
+   "macos": "apple-darwin",
+   "windows": "pc-windows-msvc",
+}[os]
+
+archive_format = {
+   "linux": "tar.gz",
+   "macos": "tar.gz",
+   "windows": "zip",
+}[os]
+
+install_binary(extract_from_url(release.get_asset_url("hatch-{arch}-{os_str}.{archive_format}".format(arch=arch, os_str=os_str, archive_format=archive_format)), "hatch"), "hatch")
