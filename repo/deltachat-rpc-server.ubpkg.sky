@@ -1,0 +1,14 @@
+gh = github_repo("chatmail/core")
+
+release = gh.latest_release()
+
+suffix = {
+   ("linux", "aarch64"): "aarch64-linux",
+   ("linux", "x86_64"): "x86_64-linux",
+   ("macos", "aarch64"): "aarch64-macos",
+   ("macos", "x86_64"): "x86_64-macos",
+   ("windows", "x86_64"): "win64.exe",
+}[(os,arch)]
+
+asset = release.get_asset_url("deltachat-rpc-server-{suffix}".format(suffix=suffix))
+install_binary(download_asset(asset, 32*1024*1024), "deltachat-rpc-server")
