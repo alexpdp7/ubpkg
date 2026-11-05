@@ -13,5 +13,5 @@ arch_str = {
     "aarch64": "arm64",
 }[arch]
 
-asset = release.get_asset_url("duckdb_cli-{os_str}-{arch_str}.zip".format(os_str=os_str, arch_str=arch_str))
+asset = release.get_asset_url("duckdb-cli-{os_str}-{arch_str}.tar.gz".format(os_str=os_str, arch_str=arch_str))
 install_binary(extract_from_url(asset, "duckdb"), "duckdb")
