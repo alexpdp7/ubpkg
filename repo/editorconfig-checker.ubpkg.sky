@@ -13,7 +13,7 @@ arch_str = {
     "aarch64": "arm64",
 }[arch]
 
-prefix = "ec-{os_str}-{arch_str}".format(os_str=os_str, arch_str=arch_str)
+prefix = "editorconfig-checker-{os_str}-{arch_str}".format(os_str=os_str, arch_str=arch_str)
 asset = release.get_asset_url("{prefix}.tar.gz".format(prefix=prefix))
 
-install_binary(extract_from_url(asset, "bin/{prefix}".format(prefix=prefix)), "ec")
+install_binary(extract_from_url(asset, "editorconfig-checker".format(prefix=prefix)), "ec")
