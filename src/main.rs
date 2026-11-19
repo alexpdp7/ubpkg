@@ -15,6 +15,7 @@ fn main() -> Result<()> {
     color_eyre::install()?;
     let args = Args::parse();
     for package in &args.packages {
+        eprintln!("Installing {package}...");
         let manifest = repo::load_manifest_from_repo(package)?;
         runner::run_manifest(manifest, args.version.clone())?;
     }
