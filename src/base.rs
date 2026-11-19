@@ -116,14 +116,11 @@ pub fn base(builder: &mut GlobalsBuilder) {
             &mut request.body_mut().as_reader(),
             &mut std::fs::File::create(asset_path.clone())?,
         )?;
-        let x = extracted_path.clone();
-        decompress::decompress(
+        exarch_core::extract_archive(
             asset_path,
-            tmp_dir.path().to_path_buf(),
-            &decompress::ExtractOptsBuilder::default()
-                .filter(move |p| p == x) // produces output https://github.com/rusty-ferris-club/decompress/issues/15
-                .build()
-                .unwrap(),
+            &tmp_dir,
+            &exarch_core::SecurityConfig::default()
+                .with_max_file_size(exarch_core::non_zero!(512 * 1024 * 1024)),
         )
         .unwrap();
 
