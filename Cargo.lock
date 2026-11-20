@@ -845,9 +845,9 @@ checksum = "0b5343afd4a8365a643ac588dab4cf234a190c7f6c88c9f6dd6ffe00837661b7"
 
 [[package]]
 name = "exarch-core"
-version = "0.10.0"
+version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7c37faef0904fa969598e471a985d98b59d021216ae11f853b88180c82cabd40"
+checksum = "eab504c9f7467557e5d9f37d5f5fa6cd0d390b1c741108fc374ccc5646893111"
 dependencies = [
  "bzip2",
  "flate2",
@@ -2746,9 +2746,9 @@ dependencies = [
 
 [[package]]
 name = "zip"
-version = "9.4.2"
+version = "9.5.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "df3845f734baabdd02de353a20580e30ceccd03897def44a4eb8e9654992e294"
+checksum = "e3476fd497ac8af5b1ec7b51acab7bef380f7e8dd8e0487595bafd839417a302"
 dependencies = [
  "bzip2",
  "constant_time_eq 0.6.1",
